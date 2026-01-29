@@ -1,5 +1,6 @@
 package com.htc.jobportal.service.impl;
 
+import com.htc.jobportal.exception.ResourceNotFoundException;
 import com.htc.jobportal.model.User;
 import com.htc.jobportal.repository.UserRepository;
 import com.htc.jobportal.service.UserService;
@@ -40,19 +41,17 @@ public class UserServiceImpl implements UserService {
     
     @Override
     public User updateUser(Long userId, User user) {
-        Optional<User> existingUser = userRepository.findById(userId);
-        if (existingUser.isPresent()) {
-            User userToUpdate = existingUser.get();
-            userToUpdate.setFirstName(user.getFirstName());
-            userToUpdate.setLastName(user.getLastName());
-            userToUpdate.setEmail(user.getEmail());
-            userToUpdate.setPassword(user.getPassword());
-            userToUpdate.setAddress(user.getAddress());
-            userToUpdate.setRole(user.getRole());
-            userToUpdate.setUpdatedAt(LocalDateTime.now());
-            return userRepository.save(userToUpdate);
-        }
-        return null;
+        User userToUpdate = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+        
+        userToUpdate.setFirstName(user.getFirstName());
+        userToUpdate.setLastName(user.getLastName());
+        userToUpdate.setEmail(user.getEmail());
+        userToUpdate.setPassword(user.getPassword());
+        userToUpdate.setAddress(user.getAddress());
+        userToUpdate.setRole(user.getRole());
+        userToUpdate.setUpdatedAt(LocalDateTime.now());
+        return userRepository.save(userToUpdate);
     }
     
     @Override
