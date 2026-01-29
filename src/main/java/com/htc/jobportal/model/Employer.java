@@ -1,6 +1,6 @@
 package com.htc.jobportal.model;
 
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+
 
 import jakarta.persistence.*;
 
